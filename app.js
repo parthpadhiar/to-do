@@ -54,29 +54,6 @@ app.get("/", (req, res) => {
   });
 });
 
-app.post("/", (req, res) => {
-  const itemName = req.body.newItem;
-  const listName = req.body.list;
-  const item = new Item({
-    name: itemName,
-  });
-
-  if (listName === "Today") {
-    item.save();
-    res.redirect("/");
-  } else {
-    List.findOne({ name: listName }, (err, foundList) => {
-      if (!err) {
-        foundList.items.push(item);
-        foundList.save();
-        res.redirect("/" + listName);
-      } else {
-        log.error(`Error in adding to database: ${err}`);
-      }
-    });
-  }
-});
-
 /**
  * add new group
  */
@@ -100,6 +77,29 @@ app.get("/:groupName", (req, res) => {
       }
     }
   });
+});
+
+app.post("/", (req, res) => {
+  const itemName = req.body.newItem;
+  const listName = req.body.list;
+  const item = new Item({
+    name: itemName,
+  });
+
+  if (listName === "Today") {
+    item.save();
+    res.redirect("/");
+  } else {
+    List.findOne({ name: listName }, (err, foundList) => {
+      if (!err) {
+        foundList.items.push(item);
+        foundList.save();
+        res.redirect("/" + listName);
+      } else {
+        log.error(`Error in adding to database: ${err}`);
+      }
+    });
+  }
 });
 
 /**
